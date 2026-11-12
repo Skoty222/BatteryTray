@@ -1,0 +1,23 @@
+BATTERY TRAY - install, launch, uninstall
+==========================================
+
+INSTALL
+1. Double-click BatteryTray-Setup.exe.
+2. If Windows shows "Windows protected your PC": click "More info", then "Run anyway".
+   (This appears because the app is not signed with a paid publisher certificate. It is normal for small free apps.)
+3. Click Next / Install / Finish. No administrator password, no extra downloads, nothing else to install.
+
+LAUNCH
+- It starts by itself right after install and every time you sign in to Windows.
+- Look for the small coloured battery-number icon near the clock. If you don't see it, click the ^ arrow to show hidden icons.
+- Click the icon to open the window. Right-click it for Refresh, Start with Windows, and Exit.
+- Closing the window keeps it running in the tray. To quit: right-click the icon > Exit.
+- Or open the Start menu and type "Battery Tray".
+
+UNINSTALL
+Settings > Apps > Installed apps > Battery Tray > Uninstall.
+This removes the app, its "start with Windows" entry and its saved settings.
+
+IF A DEVICE SAYS "UNAVAILABLE"
+Windows (or the device) does not share its battery level. The app never guesses. Glorious 2.4 GHz mice cannot be read; use
+"Set manually..." on the device card to note the level shown in Glorious CORE.

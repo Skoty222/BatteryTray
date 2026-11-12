@@ -1,0 +1,71 @@
+<Window x:Class="BatteryTray.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Settings" Width="420" Height="640" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" Background="{DynamicResource Bg}"
+        FontFamily="Segoe UI Variable, Segoe UI">
+    <Window.Resources>
+        <Style x:Key="Header" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{DynamicResource Text}"/>
+            <Setter Property="Margin" Value="0,16,0,6"/>
+        </Style>
+        <Style x:Key="Label" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource Text}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{DynamicResource Text}"/>
+            <Setter Property="Margin" Value="0,3"/>
+        </Style>
+    </Window.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20,4,20,20">
+            <TextBlock Style="{StaticResource Header}" Text="Low-battery notifications"/>
+            <CheckBox x:Name="NotifyBox" Content="Notify when a battery is low"/>
+            <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                <TextBlock Style="{StaticResource Label}" Text="Threshold" Width="80"/>
+                <Slider x:Name="ThresholdSlider" Minimum="5" Maximum="50" TickFrequency="5"
+                        IsSnapToTickEnabled="True" Width="200" VerticalAlignment="Center"/>
+                <TextBlock x:Name="ThresholdText" Style="{StaticResource Label}" Margin="10,0,0,0" Width="40"/>
+            </StackPanel>
+
+            <TextBlock Style="{StaticResource Header}" Text="General"/>
+            <CheckBox x:Name="StartupBox" Content="Start with Windows (in the tray)"/>
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <TextBlock Style="{StaticResource Label}" Text="Theme" Width="110"/>
+                <ComboBox x:Name="ThemeBox" Width="140">
+                    <ComboBoxItem Content="Follow Windows"/>
+                    <ComboBoxItem Content="Light"/>
+                    <ComboBoxItem Content="Dark"/>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <TextBlock Style="{StaticResource Label}" Text="Scan every" Width="110"/>
+                <ComboBox x:Name="IntervalBox" Width="140">
+                    <ComboBoxItem Content="30 seconds"/>
+                    <ComboBoxItem Content="1 minute"/>
+                    <ComboBoxItem Content="2 minutes"/>
+                    <ComboBoxItem Content="5 minutes"/>
+                </ComboBox>
+            </StackPanel>
+
+            <TextBlock Style="{StaticResource Header}" Text="Details to show on each device"/>
+            <CheckBox x:Name="StatusBox" Content="Connection status"/>
+            <CheckBox x:Name="TransportBox" Content="Connection type (Bluetooth, USB receiver...)"/>
+            <CheckBox x:Name="SourceBox" Content="Where the battery number came from"/>
+            <CheckBox x:Name="RemainingBox" Content="Estimated time remaining"/>
+            <CheckBox x:Name="HistoryBox" Content="24-hour battery history graph"/>
+            <CheckBox x:Name="UpdatedBox" Content="Time of last scan"/>
+
+            <TextBlock Style="{StaticResource Header}" Text="Devices to show"/>
+            <StackPanel x:Name="DevicePanel"/>
+            <TextBlock x:Name="NoDevicesText" Style="{StaticResource Label}" Text="No devices detected yet."
+                       Visibility="Collapsed" Opacity="0.7"/>
+
+            <Button Content="Close" HorizontalAlignment="Right" Padding="18,4" Margin="0,20,0,0" IsDefault="True" Click="OnClose"/>
+        </StackPanel>
+    </ScrollViewer>
+</Window>
