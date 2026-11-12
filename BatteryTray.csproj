@@ -24,6 +24,7 @@
     <!-- Avoid WPF/WinForms type-name clashes (Application, Color, ...). -->
     <Using Remove="System.Windows.Forms" />
     <Using Remove="System.Drawing" />
+    <Using Include="System.IO" />
   </ItemGroup>
 
 </Project>
