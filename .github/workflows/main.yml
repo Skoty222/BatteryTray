@@ -1,0 +1,60 @@
+name: Build installer
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Publish single self-contained exe
+        run: dotnet publish BatteryTray.csproj -c Release -o publish
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y --no-progress
+
+      - name: Build installer
+        run: '& "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" installer\BatteryTray.iss'
+
+      - name: Test install, launch, uninstall on a clean machine
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Start-Process dist\BatteryTray-Setup.exe -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART' -Wait
+          $exe = Join-Path $env:LOCALAPPDATA 'Programs\Battery Tray\BatteryTray.exe'
+          if (-not (Test-Path $exe)) { throw 'Installed exe is missing' }
+          $run = (Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -ErrorAction SilentlyContinue).BatteryTray
+          if (-not $run) { throw 'Start-with-Windows entry missing' }
+
+          $p = Start-Process $exe -ArgumentList '--tray' -PassThru
+          Start-Sleep -Seconds 12
+          if ($p.HasExited) {
+            Get-Content "$env:APPDATA\BatteryTray\log.txt" -ErrorAction SilentlyContinue
+            throw 'App exited by itself shortly after launch'
+          }
+          Stop-Process -Id $p.Id -Force
+
+          $unins = Join-Path (Split-Path $exe) 'unins000.exe'
+          Start-Process $unins -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES' -Wait
+          Start-Sleep -Seconds 3
+          if (Test-Path $exe) { throw 'Uninstall left the exe behind' }
+          $run = (Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -ErrorAction SilentlyContinue).BatteryTray
+          if ($run) { throw 'Uninstall left the startup entry behind' }
+          Write-Host 'Install / launch / uninstall test passed'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BatteryTray-Setup
+          path: dist/BatteryTray-Setup.exe
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BatteryTray-portable
+          path: publish/BatteryTray.exe
